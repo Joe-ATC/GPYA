@@ -1,0 +1,48 @@
+name: myapp
+description: "A new Flutter project."
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.9.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.8
+  supabase_flutter: ^2.12.0
+  google_fonts: ^8.0.0
+  url_launcher: ^6.3.2
+  dio: ^5.9.1
+  path_provider: ^2.1.5
+  permission_handler: ^12.0.1
+  open_filex: ^4.7.0
+  flutter_animate: ^4.5.2
+  flutter_tilt: ^3.3.2
+  animated_text_kit: ^4.3.0
+  flutter_svg: ^2.0.10+1 # Needed to display SVG images
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^5.0.0
+  flutter_launcher_icons: ^0.14.4
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/
+    - assets/icon/ # Directorio para el icono de la app
+
+# --- Configuración del Icono de la App ---
+flutter_launcher_icons:
+  android: "launcher_icon" # Nombre del icono para Android
+  ios: true # Generar icono para iOS
+  image_path: "assets/icon/icon.png" # Ruta a tu logo
+  web:
+    generate: true
+    image_path: "assets/icon/icon.png"
+    background_color: "#1A1A1A" # Color de fondo para el favicon web
+    theme_color: "#D32F2F" # Color del tema para el favicon web

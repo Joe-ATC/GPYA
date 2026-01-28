@@ -1,0 +1,19 @@
+# Flutter
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.dart_tool/
+build/
+
+# IDEs
+.idea/
+.vscode/
+*.iml
+*.iws
+
+# Sistema Operativo
+.DS_Store
+
+# Archivos sensibles
+local.properties

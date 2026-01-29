@@ -1,110 +1,96 @@
-# GPYA - Aplicación de Documentación Legal
+# README: Guía Completa del Proyecto Flutter
 
-Aplicación móvil para iOS y Android que permite a los usuarios visualizar y descargar documentación legal esencial. La app proyecta una imagen de modernidad, seguridad y elegancia, con una identidad visual audaz y funciones de mantenimiento accesibles para el usuario.
-
----
-
-## 📋 Características Principales
-
-- **Interfaz Moderna y Elegante:**
-  - Tema oscuro con acentos en rojo corporativo.
-  - Tipografía profesional con Google Fonts (`Montserrat`).
-  - Fondos con degradado y tarjetas con efecto "Glassmorphism" (cristal esmerilado).
-  - Iconos de aplicación personalizados para todas las plataformas.
-
-- **Backend Robusto con Supabase:**
-  - Conexión a una base de datos PostgreSQL para obtener la lista de documentos.
-  - La configuración está centralizada en `lib/main.dart` para un fácil mantenimiento.
-
-- **Funcionalidad Orientada al Usuario:**
-  - Descarga de documentos con seguimiento de progreso.
-  - Apertura de archivos descargados directamente desde la app.
-  - Sincronización de datos bajo demanda.
-  - Limpieza de caché de la aplicación.
-
-- **Multiplataforma (Mobile First):**
-  - Código base único de Flutter para Android e iOS.
-  - Preparado para compilación nativa en ambas plataformas.
+Este documento proporciona una guía detallada para configurar, ejecutar, y construir la aplicación Flutter desarrollada. El objetivo es asegurar que cualquier desarrollador pueda poner en marcha el proyecto en su máquina local (Windows, macOS, o Linux) sin fricciones, especialmente usando Visual Studio Code.
 
 ---
 
-## 🛠️ Pre-requisitos de Software
+## 📋 Requisitos Previos
 
-Antes de empezar, asegúrate de tener instalado el siguiente software en tu máquina:
+Antes de empezar, asegúrate de tener instalado y configurado lo siguiente en tu sistema:
 
-1.  **Flutter SDK:** [Guía de Instalación Oficial](https://docs.flutter.dev/get-started/install)
-2.  **Git:** Para clonar el repositorio.
-3.  **Un Editor de Código:** Se recomienda **Visual Studio Code** (con la extensión de Flutter) o **Android Studio**.
-4.  **Xcode:** (Solo para desarrollo y compilación en macOS/iOS).
-
----
-
-## 🚀 Guía de Instalación y Ejecución
-
-Sigue estos pasos para poner el proyecto en marcha en tu máquina local.
-
-### 1. Clonar el Repositorio
-
-Abre tu terminal, navega a tu directorio de trabajo y clona el repositorio de GitHub.
-
-```bash
-git clone https://github.com/Joe-ATC/GPYA.git
-```
-
-### 2. Entrar al Directorio del Proyecto
-
-```bash
-cd GPYA
-```
-
-### 3. Instalar Dependencias
-
-Este comando descargará todas las librerías de Flutter necesarias para el proyecto (Supabase, Dio, etc.).
-
-```bash
-flutter pub get
-```
-
-### 4. Verificar la Instalación (Opcional pero Recomendado)
-
-Ejecuta `flutter doctor` para asegurarte de que tu entorno de desarrollo no tiene problemas.
-
-```bash
-flutter doctor
-```
-
-### 5. Ejecutar la Aplicación
-
-- Asegúrate de tener un emulador corriendo o un dispositivo físico conectado.
-- Ejecuta el siguiente comando:
-
-```bash
-flutter run
-```
+1.  **Flutter SDK:** [Instrucciones de Instalación de Flutter](https://flutter.dev/docs/get-started/install)
+2.  **Visual Studio Code:** [Descargar VS Code](https://code.visualstudio.com/)
+3.  **Extensiones de VS Code:**
+    *   `Flutter` (imprescindible para el desarrollo con Flutter).
+    *   `Dart` (generalmente se instala con la extensión de Flutter).
 
 ---
 
-## 🍏 Instrucciones Específicas para iOS (en macOS)
+## 🚀 Cómo Ejecutar el Proyecto en VS Code (Modo Desarrollo)
 
-Después de seguir los pasos 1, 2 y 3 en tu Mac, hay algunos pasos adicionales:
+Sigue estos pasos para ejecutar la aplicación en un emulador o en tu dispositivo físico.
 
-1.  **Instalar Dependencias de CocoaPods:**
+1.  **Clonar el Repositorio:**
+    
+    Abre una terminal y clona este repositorio en tu máquina local:
+    
     ```bash
-    cd ios
-    pod install
-    cd ..
+    git clone https://github.com/Joe-ATC/GPYA.git
     ```
-
-2.  **Abrir el Proyecto en Xcode:**
-    Es crucial abrir el archivo `.xcworkspace`, no el `.xcodeproj`.
+    
+2.  **Abrir en VS Code:**
+    
+    Abre la carpeta del proyecto recién clonado en Visual Studio Code.
+    
     ```bash
-    open ios/Runner.xcworkspace
+    cd GPYA
+    code .
     ```
+    
+3.  **Instalar Dependencias:**
+    
+    VS Code podría notificarte automáticamente para que instales las dependencias. Si no es así, abre la terminal integrada de VS Code (`Ctrl + ñ` o `View > Terminal`) y ejecuta:
+    
+    ```bash
+    flutter pub get
+    ```
+    
+4.  **Seleccionar un Dispositivo:**
+    
+    En la esquina inferior derecha de la barra de estado de VS Code, verás el dispositivo seleccionado (ej. `Chrome (web)`). Haz clic ahí para seleccionar un emulador de Android, un simulador de iOS, o tu dispositivo físico conectado.
+    
+5.  **Iniciar la Depuración:**
+    
+    Presiona la tecla **`F5`** o ve al menú `Run > Start Debugging`. Esto compilará la aplicación y la lanzará en el dispositivo seleccionado con el modo de "Hot Reload" activado, permitiéndote ver los cambios en el código al instante.
 
-3.  **Configurar la Firma de Código:**
-    - Dentro de Xcode, selecciona `Runner` en el navegador de archivos de la izquierda.
-    - Ve a la pestaña `Signing & Capabilities`.
-    - En la sección `Team`, selecciona tu cuenta de Desarrollador de Apple.
+---
 
-4.  **Ejecutar desde Xcode:**
-    Selecciona tu simulador de iPhone o dispositivo físico y presiona el botón de **Play (▶️)**.
+## 📦 Cómo Construir el Proyecto (Build)
+
+Si necesitas generar los archivos finales para distribución (por ejemplo, un `.apk` para Android o un paquete para iOS), sigue estas instrucciones.
+
+### Generar APK para Android
+
+Para construir el archivo `.apk` de producción, que puedes instalar manualmente en cualquier dispositivo Android, ejecuta el siguiente comando en la terminal integrada de VS Code:
+
+```bash
+flutter build apk
+```
+
+Una vez completado, encontrarás el archivo instalador en la siguiente ruta dentro de tu proyecto:
+
+`build/app/outputs/flutter-apk/app-release.apk`
+
+
+---
+
+## ✨ Estructura del Proyecto
+
+El proyecto sigue una estructura organizada para facilitar su mantenimiento:
+
+```
+/ (Raíz del Proyecto)
+├── lib/
+│   ├── main.dart             # Punto de entrada principal, configuración de tema y rutas.
+│   └── screens/
+│       ├── documents_screen.dart # Pantalla para la gestión de documentos.
+│       └── settings_screen.dart  # Pantalla de configuración.
+├── assets/
+│   ├── icons/                  # Iconos específicos de la app.
+│   └── logo.png                # Logo principal.
+└── pubspec.yaml            # Definición de dependencias y assets.
+```
+
+---
+
+Este `README` asegura que el proyecto sea **auto-contenido y transferible**. Cualquier desarrollador con las herramientas básicas de Flutter puede, no solo ejecutarlo, sino también construirlo para producción sin necesidad de archivos pre-compilados en el repositorio.

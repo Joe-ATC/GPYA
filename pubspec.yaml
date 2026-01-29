@@ -21,7 +21,11 @@ dependencies:
   flutter_animate: ^4.5.2
   flutter_tilt: ^3.3.2
   animated_text_kit: ^4.3.0
-  flutter_svg: ^2.0.10+1 # Needed to display SVG images
+  flutter_svg: ^2.0.10+1
+  go_router: ^14.2.0
+  intl: ^0.19.0
+  flutter_riverpod: ^2.5.1
+  shared_preferences: ^2.5.4
 
 dev_dependencies:
   flutter_test:
@@ -29,20 +33,37 @@ dev_dependencies:
 
   flutter_lints: ^5.0.0
   flutter_launcher_icons: ^0.14.4
+  build_runner: ^2.4.11
 
 flutter:
   uses-material-design: true
   assets:
     - assets/images/
-    - assets/icon/ # Directorio para el icono de la app
+    - assets/icon/
 
-# --- Configuración del Icono de la App ---
 flutter_launcher_icons:
-  android: "launcher_icon" # Nombre del icono para Android
-  ios: true # Generar icono para iOS
-  image_path: "assets/icon/icon.png" # Ruta a tu logo
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/icon/icon.png"
+  
+  adaptive_icon_background: "#1A1A1A"
+  adaptive_icon_foreground: "assets/icon/icon_foreground.png"
+
   web:
     generate: true
     image_path: "assets/icon/icon.png"
-    background_color: "#1A1A1A" # Color de fondo para el favicon web
-    theme_color: "#D32F2F" # Color del tema para el favicon web
+    background_color: "#1A1A1A"
+    theme_color: "#D32F2F"
+    
+  windows:
+    generate: true
+    image_path: "assets/icon/icon.png"
+    icon_size: 48 # Favicon size for Windows
+
+  macos:
+    generate: true
+    image_path: "assets/icon/icon.png"
+
+  linux:
+    generate: true
+    image_path: "assets/icon/icon.png"

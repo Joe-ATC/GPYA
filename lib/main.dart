@@ -1,130 +1,100 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:myapp/src/routing/app_router.dart';
+import 'package:myapp/src/features/settings/theme_provider.dart'; // Importar el provider
 
-import 'package:myapp/screens/splash_screen.dart';
-import 'package:myapp/screens/home_screen.dart';
-import 'package:myapp/screens/dashboard_screen.dart';
-import 'package:myapp/screens/services_screen.dart';
-import 'package:myapp/screens/settings_screen.dart';
-
-final GlobalKey<DashboardScreenState> _dashboardKey = GlobalKey<DashboardScreenState>();
-
-final List<Widget> _widgetOptions = <Widget>[
-  const HomeScreen(),
-  DashboardScreen(key: _dashboardKey),
-  const ServicesScreen(),
-  SettingsScreen(dashboardKey: _dashboardKey),
-];
-
-Future<void> main() async {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  
   await Supabase.initialize(
-    url: 'https://ifbmzqzxvogewkekapcv.supabase.co',
-    anonKey:
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlmYm16cXp4dm9nZXdrZWthcGN2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk1MzAwMjQsImV4cCI6MjA4NTEwNjAyNH0.K3DZB5QmLs-HnkAz5dkokUkHODzXj-CUW2MN8gMHqgs',
+    url: 'https://brutkvbarchbslcykkyrh.supabase.co',
+    anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJydXRrdmJhcmNoc2xjeWtreXJoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTYzODY5NzIsImV4cCI6MjAzMTk2Mjk3Mn0.SN236p132wT44hA3I_t5FajQ11f-so2-O3sU3B2jUIU',
   );
 
-  runApp(const MyApp());
+  runApp(const ProviderScope(child: MyApp()));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    const Color primaryBlack = Color(0xFF1A1A1A);
-    const Color accentRed = Color(0xFFD32F2F);
-    const Color textWhite = Color(0xFFEAEAEA);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final router = ref.watch(routerProvider);
+    final themeMode = ref.watch(themeProvider);
 
-    final TextTheme appTextTheme = TextTheme(
-      displayLarge: GoogleFonts.montserrat(fontSize: 48, fontWeight: FontWeight.bold, color: textWhite),
-      titleLarge: GoogleFonts.montserrat(fontSize: 24, fontWeight: FontWeight.w600, color: textWhite),
-      bodyMedium: GoogleFonts.montserrat(fontSize: 14, color: textWhite.withAlpha(220)),
-      labelLarge: GoogleFonts.montserrat(fontSize: 14, fontWeight: FontWeight.w600, color: textWhite),
-    );
+    const accentRed = Color(0xFFD32F2F);
 
-    return MaterialApp(
-      title: 'Grupo Padilla y Aguilar',
-      theme: ThemeData(
-        useMaterial3: true,
-        scaffoldBackgroundColor: primaryBlack,
-        colorScheme: const ColorScheme.dark(
-          primary: accentRed,
-          secondary: accentRed,
-          surface: primaryBlack,
-          surfaceContainer: Color(0xFF2C2C2C),
-          onPrimary: textWhite,
-          onSecondary: textWhite,
-          onSurface: textWhite,
-        ),
-        textTheme: appTextTheme,
-        appBarTheme: AppBarTheme(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          centerTitle: true,
-          titleTextStyle: GoogleFonts.montserrat(fontSize: 20, fontWeight: FontWeight.w500),
-        ),
-        bottomNavigationBarTheme: BottomNavigationBarThemeData(
-          backgroundColor: primaryBlack,
-          selectedItemColor: accentRed,
-          unselectedItemColor: Colors.grey[600],
-          showUnselectedLabels: false,
-          type: BottomNavigationBarType.fixed,
+    final lightTheme = ThemeData(
+      brightness: Brightness.light,
+      primaryColor: Colors.white,
+      scaffoldBackgroundColor: const Color(0xFFF5F5F5),
+      colorScheme: ColorScheme.light(
+        primary: accentRed,
+        secondary: accentRed,
+        surface: Colors.white,
+        onPrimary: Colors.white,
+        onSecondary: Colors.white,
+        onSurface: Colors.black87,
+        error: Colors.redAccent,
+      ),
+      textTheme: GoogleFonts.montserratTextTheme(ThemeData.light().textTheme),
+      appBarTheme: const AppBarTheme(
+        backgroundColor: Colors.white,
+        elevation: 1,
+        foregroundColor: Colors.black87,
+        titleTextStyle: TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 20,
+          color: Colors.black87
         ),
       ),
-      home: const SplashScreen(),
+      bottomNavigationBarTheme: BottomNavigationBarThemeData(
+        backgroundColor: Colors.white,
+        selectedItemColor: accentRed,
+        unselectedItemColor: Colors.grey[600],
+        type: BottomNavigationBarType.fixed,
+      ),
+    );
+
+    final darkTheme = ThemeData(
+      brightness: Brightness.dark,
+      primaryColor: const Color(0xFF1A1A1A),
+      scaffoldBackgroundColor: const Color(0xFF1A1A1A),
+      colorScheme: ColorScheme.dark(
+        primary: accentRed,
+        secondary: accentRed,
+        surface: Colors.grey[850]!,
+        onPrimary: Colors.white,
+        onSecondary: Colors.white,
+        onSurface: Colors.white70,
+        error: Colors.redAccent,
+      ),
+      textTheme: GoogleFonts.montserratTextTheme(ThemeData.dark().textTheme),
+      appBarTheme: const AppBarTheme(
+        backgroundColor: Color(0xFF1A1A1A),
+        elevation: 0,
+        titleTextStyle: TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 20,
+        ),
+      ),
+      bottomNavigationBarTheme: BottomNavigationBarThemeData(
+        backgroundColor: const Color(0xFF1A1A1A),
+        selectedItemColor: accentRed,
+        unselectedItemColor: Colors.grey[500],
+        type: BottomNavigationBarType.fixed,
+      ),
+    );
+
+    return MaterialApp.router(
+      title: 'DocuFlow',
+      theme: lightTheme,
+      darkTheme: darkTheme,
+      themeMode: themeMode,
+      routerConfig: router,
       debugShowCheckedModeBanner: false,
-    );
-  }
-}
-
-class MainScreen extends StatefulWidget {
-  const MainScreen({super.key});
-
-  @override
-  State<MainScreen> createState() => _MainScreenState();
-}
-
-class _MainScreenState extends State<MainScreen> {
-  int _selectedIndex = 0;
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: IndexedStack(
-        index: _selectedIndex,
-        children: _widgetOptions,
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_filled),
-            label: 'Inicio',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.folder_copy_rounded),
-            label: 'Documentos',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.construction_rounded),
-            label: 'Servicios',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings_rounded),
-            label: 'Ajustes',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-      ),
     );
   }
 }

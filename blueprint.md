@@ -4,31 +4,25 @@
 Crear una aplicación móvil para iOS, Android y web que permita a los usuarios de la firma visualizar y descargar documentación legal esencial. La app debe proyectar una imagen de modernidad, seguridad y elegancia, con una identidad visual audaz y funciones de mantenimiento accesibles para el usuario.
 
 ## 2. Diseño y Estilo (UI/UX) - "Rojo Corporativo y Claridad Cristalina"
-*   **Paleta de Colores:** Se utiliza un tema oscuro (`primaryBlack`) con un rojo corporativo (`accentRed`) como color de acento para todos los elementos interactivos, proyectando una imagen enérgica y profesional.
+*   **Paleta de Colores:** La aplicación utiliza un tema oscuro por defecto, con un rojo corporativo (`#D32F2F`) como color de acento. Se ha implementado un `ThemeProvider` para permitir al usuario cambiar entre modo oscuro, claro y del sistema.
 *   **Tipografía:** Se mantiene la fuente `Montserrat` de Google Fonts para una legibilidad y elegancia consistentes.
-*   **Fondo:** Se conserva el fondo de degradado radial oscuro que va desde un gris superficie (`surface`) hasta el negro puro, creando una sensación de profundidad.
-*   **Tarjetas:** La pantalla de "Documentos" utiliza tarjetas con efecto de "cristal esmerilado" (`BackdropFilter`) para una apariencia moderna y sofisticada.
-*   **Icono de la App:** Se ha configurado `flutter_launcher_icons` para generar automáticamente los iconos de la aplicación para todas las plataformas (Android, iOS, web) a partir de un único archivo de origen.
+*   **Fondo:** El fondo de la app se adapta al tema seleccionado (oscuro o claro).
+*   **Tarjetas:** Las pantallas utilizan `Card`s con una ligera elevación para organizar el contenido de forma modular y moderna.
+*   **Icono de la App:** Se ha configurado `flutter_launcher_icons` para generar automáticamente los iconos de la aplicación para todas las plataformas.
 
 ## 3. Arquitectura y Funcionalidad
-*   **Navegación:** La aplicación se estructura en torno a una `BottomNavigationBar` con cuatro secciones principales: Inicio, Documentos, Servicios y Ajustes. Se usa un `IndexedStack` para mantener el estado de cada pantalla al navegar.
-*   **Gestión de Estado (Sincronización):** Se utiliza una `GlobalKey` para permitir la comunicación entre la pantalla de "Ajustes" y la de "Documentos", permitiendo que la primera pueda invocar un método público (`refreshDocuments`) en la segunda para forzar una recarga de datos.
-*   **Backend:** Supabase sigue siendo el backend para la obtención de la lista de documentos.
-*   **Funcionalidades de Ajustes:**
-    *   **Sincronizar Datos:** Recarga la lista de documentos desde Supabase.
-    *   **Limpiar Caché:** Elimina archivos temporales de la aplicación usando `path_provider`.
-    *   **Gestionar Permisos:** Abre la pantalla de configuración de permisos de la app en el sistema operativo del dispositivo a través de `permission_handler`.
+*   **Navegación:** Se utiliza `go_router` con un `StatefulNavigationShell` para una navegación persistente entre las cuatro secciones principales.
+*   **Gestión de Estado:** `flutter_riverpod` es el principal gestor de estado, utilizado para la obtención de datos (`documents_provider`) y la gestión del tema de la aplicación (`theme_provider`).
+*   **Backend:** Supabase se utiliza para la autenticación y el almacenamiento y obtención de la lista de documentos.
 
-## 4. Plan de Implementación (Últimas Mejoras)
+## 4. Historial de Implementación
+*   **Corrección de Errores y Advertencias:** Se solucionaron todos los problemas de análisis estático reportados por `flutter analyze`. *(Completado)*
+*   **Configuración de Identidad Visual:** Se definió la paleta de colores, tipografía y se generó el icono de la app. *(Completado)*
+*   **Implementación de Pantalla de Ajustes (v1):** Se creó una estructura básica para la pantalla de ajustes. *(Reemplazado)*
+*   **Rediseño y Población de Pantalla de Inicio:** Se transformó la `HomeScreen` en una sección de bienvenida informativa. *(Completado)*
+*   **Construcción de la Pantalla de Servicios:** Se creó una pantalla para listar detalladamente los servicios de la empresa. *(Completado)*
+*   **Implementación de la Pantalla de Ajustes Funcional:** Se rediseñó la pantalla, se implementó el cambio de tema (claro/oscuro/sistema) con persistencia y se pulió la lógica de cierre de sesión. *(Completado)*
 
-1.  **Corregir Descargas en Android:** Se eliminó la lógica de solicitud de permisos (`permission_handler`) que era redundante y causaba fallos en versiones modernas de Android, simplificando el flujo de descarga. *(Completado)*
-2.  **Cambio de Paleta de Colores:** Se actualizó `main.dart` para reemplazar el color de acento dorado por un rojo corporativo (`#D32F2F`). *(Completado)*
-3.  **Implementar Pantalla de Ajustes:**
-    *   Se reescribió `lib/screens/settings_screen.dart` para incluir las opciones de Sincronizar, Limpiar Caché y Gestionar Permisos, usando `ListTile`s para una UI clara. *(Completado)*
-    *   Se añadió el método `refreshDocuments()` a `lib/screens/dashboard_screen.dart` y se hizo accesible mediante una `GlobalKey`. *(Completado)*
-4.  **Configurar Icono de la Aplicación:**
-    *   Se añadió el paquete `flutter_launcher_icons` a `pubspec.yaml`. *(Completado)*
-    *   Se configuró el `pubspec.yaml` para definir la ruta de la imagen del icono y las opciones de generación para Android, iOS y web. *(Completado)*
-    *   Se instruyó al usuario para colocar el `icon.png` y ejecutar el comando de generación. *(Completado)*
-5.  **Poblar Pantalla de Inicio:** **(Pendiente)** A la espera de que el usuario proporcione el texto de la web `https://azure-stingray-462195.hostingersite.com/`.
+## 5. Plan de Implementación (Completado)
 
+¡Todas las tareas planificadas han sido completadas con éxito! La aplicación cuenta con todas las funcionalidades y el diseño visual definidos en este blueprint.

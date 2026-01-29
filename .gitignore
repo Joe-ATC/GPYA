@@ -15,5 +15,8 @@ build/
 # Sistema Operativo
 .DS_Store
 
+# Archivos de registro
+*.log
+
 # Archivos sensibles
 local.properties

@@ -35,7 +35,6 @@ extension DocumentCategoryExtension on DocumentCategory {
   }
 }
 
-
 class Document {
   final String id;
   final String title;
@@ -59,16 +58,17 @@ class Document {
 
   factory Document.fromJson(Map<String, dynamic> json) {
     return Document(
-      id: json['id'] as String,
-      title: json['title'] as String,
-      description: json['description'] as String,
-      fileUrl: json['file_url'] as String,
+      // CORRECCIÓN: Se convierte el ID a String de forma segura para evitar errores de tipo.
+      id: json['id'].toString(),
+      title: json['title'] as String? ?? '',
+      description: json['description'] as String? ?? '',
+      fileUrl: json['url'] as String? ?? '',
       thumbnailUrl: json['thumbnail_url'] as String?,
       createdAt: DateTime.parse(json['created_at'] as String),
       // Conversión segura del string de la DB a nuestro enum
       category: categoryFromString(json['category'] as String?),
       // Aseguramos que downloadUrl no sea nulo
-      downloadUrl: json['download_url'] as String? ?? json['file_url'] as String,
+      downloadUrl: json['download_url'] as String? ?? json['url'] as String? ?? '',
     );
   }
 }

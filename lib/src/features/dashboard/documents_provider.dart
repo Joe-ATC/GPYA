@@ -7,11 +7,13 @@ final documentsProvider = FutureProvider<List<Document>>((ref) async {
   final supabase = Supabase.instance.client;
   
   try {
-    final response = await supabase.from('documents').select();
+    final response = await supabase.from('documentos').select();
     
+    // IMPRESIÓN DE DEPURACIÓN: Muestra los datos crudos de Supabase en la consola.
+    developer.log('Datos recibidos de Supabase: $response', name: 'documentsProvider');
+
     final documents = (response as List).map((item) => Document.fromJson(item)).toList();
     
-    // Ordenar documentos por fecha de creación (los más nuevos primero)
     documents.sort((a, b) => b.createdAt.compareTo(a.createdAt));
     
     return documents;
@@ -22,6 +24,6 @@ final documentsProvider = FutureProvider<List<Document>>((ref) async {
       error: e,
       stackTrace: stackTrace,
     );
-    throw Exception('No se pudieron cargar los documentos. Inténtelo de nuevo.');
+    throw Exception('No se pudieron cargar los documents. Error: ${e.toString()}');
   }
 });

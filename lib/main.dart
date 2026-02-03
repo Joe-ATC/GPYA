@@ -1,19 +1,30 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:myapp/src/routing/app_router.dart';
-import 'package:myapp/src/features/settings/theme_provider.dart'; // Importar el provider
+import 'package:myapp/src/features/settings/theme_provider.dart';
+import 'dart:developer' as developer;
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  
-  await Supabase.initialize(
-    url: 'https://brutkvbarchbslcykkyrh.supabase.co',
-    anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJydXRrdmJhcmNoc2xjeWtreXJoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTYzODY5NzIsImV4cCI6MjAzMTk2Mjk3Mn0.SN236p132wT44hA3I_t5FajQ11f-so2-O3sU3B2jUIU',
-  );
+void main() {
+  runZonedGuarded<Future<void>>(() async {
+    WidgetsFlutterBinding.ensureInitialized();
 
-  runApp(const ProviderScope(child: MyApp()));
+    await Supabase.initialize(
+      url: 'https://ifbmzqzxvogewkekapcv.supabase.co',
+      anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlmYm16cXp4dm9nZXdrZWthcGN2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk1MzAwMjQsImV4cCI6MjA4NTEwNjAyNH0.K3DZB5QmLs-HnkAz5dkokUkHODzXj-CUW2MN8gMHqgs',
+    );
+
+    runApp(const ProviderScope(child: MyApp()));
+  }, (error, stack) {
+    developer.log(
+      'Error fatal no controlado',
+      name: 'main',
+      error: error,
+      stackTrace: stack,
+    );
+  });
 }
 
 class MyApp extends ConsumerWidget {

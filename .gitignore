@@ -1,22 +1,28 @@
-# Flutter
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.buildlog/
+.history
+.svn/
+
+# Flutter/Dart specific
+.dart_tool/
 .flutter-plugins
 .flutter-plugins-dependencies
-.packages
 .pub-cache/
-.dart_tool/
-build/
+.pub/
+/build/
 
-# IDEs
+# App-specific
+app-release.apk
+
+# IntelliJ
 .idea/
-.vscode/
 *.iml
-*.iws
 
-# Sistema Operativo
-.DS_Store
-
-# Archivos de registro
-*.log
-
-# Archivos sensibles
-local.properties
+# Visual Studio Code
+.vscode/

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class AppHeader extends StatelessWidget implements PreferredSizeWidget {
   const AppHeader({super.key});
@@ -13,29 +12,28 @@ class AppHeader extends StatelessWidget implements PreferredSizeWidget {
         color: theme.colorScheme.surface,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withAlpha(51), // CORREGIDO: Opacidad válida
+            color: Colors.black.withAlpha(51), // Opacidad válida
             spreadRadius: 1,
             blurRadius: 3,
-            offset: const Offset(0, 1), // changes position of shadow
+            offset: const Offset(0, 1), // Sombra
           ),
         ],
       ),
       child: SafeArea(
-        bottom: false, // No padding at the bottom of the SafeArea
+        bottom: false, // Sin padding inferior en SafeArea
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // Usamos el logo en formato SVG para calidad perfecta
-            SvgPicture.asset(
-              'assets/images/logo.svg', 
+            // USA EL ICONO CORRECTO DE LA APP
+            Image.asset(
+              'assets/icon/icon-app.png', 
               height: 40, 
-              colorFilter: ColorFilter.mode(theme.colorScheme.primary, BlendMode.srcIn),
             ),
             const SizedBox(width: 12),
             // Nombre de la empresa
             Text(
-              'Grupo Padilla y Aguilar',
+              'GPYA', // Se actualiza al nuevo nombre corto de la app
               style: theme.textTheme.titleLarge?.copyWith(
                 fontSize: 18,
                 fontWeight: FontWeight.w600,

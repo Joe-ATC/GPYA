@@ -1,13 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/widgets/app_header.dart';
 import 'package:go_router/go_router.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
+  // Función para lanzar URLs
+  Future<void> _launchUrl(String url) async {
+    final Uri uri = Uri.parse(url);
+    if (!await launchUrl(uri)) {
+      throw Exception('No se pudo lanzar $url');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    const phoneNumber = "525583252920";
+    const message = "Hola quiero más información sobre...";
+    final whatsappUrl = "https://wa.me/$phoneNumber?text=${Uri.encodeComponent(message)}";
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -34,24 +46,146 @@ class HomeScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 32),
                   ElevatedButton(
-                    onPressed: () => context.go('/servicios'), 
+                    onPressed: () => context.go('/dashboard'),
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                     ),
                     child: const Text(
-                      'Explore Nuestros Servicios',
+                      'Acceder a la Documentación',
                       style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                   ),
                   const SizedBox(height: 48),
                   const _FeatureHighlight(),
+                  const SizedBox(height: 48),
+                  const _ComingSoon(),
+                  const SizedBox(height: 48),
+                  _ContactInfo(launchUrl: _launchUrl),
+                  const SizedBox(height: 32), // Espacio al final
                 ],
               ),
             ),
           ],
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => _launchUrl(whatsappUrl),
+        backgroundColor: Colors.transparent, // Fondo transparente
+        elevation: 0,
+        tooltip: 'Contactar por WhatsApp',
+        child: Image.asset('assets/icon/logo-wp.png'), // Usa la nueva imagen
+      ),
+    );
+  }
+}
+
+class _ContactInfo extends StatelessWidget {
+  final Future<void> Function(String) launchUrl;
+  const _ContactInfo({required this.launchUrl});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Contacto',
+          style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 16),
+        _ContactItem(
+          icon: Icons.phone_outlined,
+          text: '55 1234 5678',
+          onTap: () => launchUrl('tel:525512345678'),
+        ),
+        const SizedBox(height: 12),
+        _ContactItem(
+          icon: Icons.email_outlined,
+          text: 'contacto@gpya.com.mx',
+          onTap: () => launchUrl('mailto:contacto@gpya.com.mx'),
+        ),
+        const SizedBox(height: 12),
+        _ContactItem(
+          icon: Icons.location_on_outlined,
+          text: 'Av. Paseo de la Reforma 222, CDMX, México',
+          onTap: () => launchUrl('https://maps.google.com/?q=Paseo+de+la+Reforma+222+CDMX'),
+        ),
+      ],
+    );
+  }
+}
+
+class _ContactItem extends StatelessWidget {
+  final IconData icon;
+  final String text;
+  final VoidCallback onTap;
+
+  const _ContactItem({required this.icon, required this.text, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(8),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        child: Row(
+          children: [
+            Icon(icon, color: theme.colorScheme.secondary, size: 24),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Text(text, style: theme.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600)),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _ComingSoon extends StatelessWidget {
+  const _ComingSoon();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Próximamente',
+          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+        ),
+        const SizedBox(height: 16),
+        const Wrap(
+          spacing: 16,
+          runSpacing: 16,
+          children: [
+            _Bubble(text: 'Capacitaciones'),
+            _Bubble(text: 'Noticias y Alertas'),
+            _Bubble(text: 'Gestión de Trámites'),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class _Bubble extends StatelessWidget {
+  final String text;
+  const _Bubble({required this.text});
+
+  @override
+  Widget build(BuildContext context) {
+    return Chip(
+      label: Text(text),
+      backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
+      labelStyle: Theme.of(context).textTheme.bodyMedium,
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
     );
   }
 }

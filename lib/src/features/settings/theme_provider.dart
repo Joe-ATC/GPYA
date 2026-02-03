@@ -2,37 +2,36 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-// 1. Definir el Provider
+// Proveedor de Riverpod para el notificador del tema
 final themeProvider = StateNotifierProvider<ThemeNotifier, ThemeMode>((ref) {
   return ThemeNotifier();
 });
 
-// 2. Crear el Notifier
 class ThemeNotifier extends StateNotifier<ThemeMode> {
-  static const _themePrefsKey = 'theme_mode';
+  late SharedPreferences _prefs;
 
   ThemeNotifier() : super(ThemeMode.dark) {
     _loadTheme();
   }
 
-  // Cargar el tema desde SharedPreferences
-  Future<void> _loadTheme() async {
-    final prefs = await SharedPreferences.getInstance();
-    final themeIndex = prefs.getInt(_themePrefsKey);
+  Future<void> _initPrefs() async {
+    _prefs = await SharedPreferences.getInstance();
+  }
 
-    if (themeIndex != null && themeIndex < ThemeMode.values.length) {
+  Future<void> _loadTheme() async {
+    await _initPrefs();
+    final themeIndex = _prefs.getInt('theme');
+    if (themeIndex != null) {
       state = ThemeMode.values[themeIndex];
     } else {
       state = ThemeMode.dark; // Predeterminado a oscuro si no hay nada guardado
     }
   }
 
-  // Cambiar y guardar el tema
   Future<void> setTheme(ThemeMode themeMode) async {
     if (state == themeMode) return; // No hacer nada si el tema ya está seleccionado
 
     state = themeMode;
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setInt(_themePrefsKey, themeMode.index);
+    await _prefs.setInt('theme', themeMode.index);
   }
 }

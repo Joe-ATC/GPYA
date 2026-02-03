@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:myapp/widgets/app_header.dart';
 import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -19,52 +20,114 @@ class HomeScreen extends StatelessWidget {
     final theme = Theme.of(context);
     const phoneNumber = "525583252920";
     const message = "Hola quiero más información sobre...";
-    final whatsappUrl = "https://wa.me/$phoneNumber?text=${Uri.encodeComponent(message)}";
+    final whatsappUrl =
+        "https://wa.me/$phoneNumber?text=${Uri.encodeComponent(message)}";
 
     return Scaffold(
+      appBar: const AppHeader(),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            const AppHeader(),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 32.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    'Consultoría Integral para Empresas',
-                    style: theme.textTheme.headlineLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: theme.colorScheme.primary,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    'Navegue el complejo panorama legal y regulatorio de México con un aliado estratégico a su lado. En Padilla y Aguilar, garantizamos la seguridad, cumplimiento y continuidad de su negocio.',
-                    style: theme.textTheme.titleMedium,
-                  ),
-                  const SizedBox(height: 32),
-                  ElevatedButton(
-                    onPressed: () => context.go('/dashboard'),
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                    ),
-                    child: const Text(
-                      'Acceder a la Documentación',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  const SizedBox(height: 48),
-                  const _FeatureHighlight(),
-                  const SizedBox(height: 48),
-                  const _ComingSoon(),
-                  const SizedBox(height: 48),
-                  _ContactInfo(launchUrl: _launchUrl),
-                  const SizedBox(height: 32), // Espacio al final
-                ],
+              padding: const EdgeInsets.symmetric(
+                horizontal: 24.0,
+                vertical: 32.0,
               ),
+              child:
+                  Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          // Hero Section
+                          Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(24.0),
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [
+                                  theme.colorScheme.primary,
+                                  Color(
+                                    0xFFB71C1C,
+                                  ), // Un tono más oscuro de rojo
+                                ],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                              ),
+                              borderRadius: BorderRadius.circular(24),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: theme.colorScheme.primary.withValues(
+                                    alpha: 0.3,
+                                  ),
+                                  blurRadius: 15,
+                                  offset: const Offset(0, 8),
+                                ),
+                              ],
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Consultoría Integral para Empresas',
+                                  style: theme.textTheme.headlineMedium
+                                      ?.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                      ),
+                                ),
+                                const SizedBox(height: 16),
+                                Text(
+                                  'Navegue el complejo panorama legal y regulatorio de México con un aliado estratégico a su lado. En Padilla y Aguilar, garantizamos la seguridad, cumplimiento y continuidad de su negocio.',
+                                  style: theme.textTheme.bodyLarge?.copyWith(
+                                    color: Colors.white.withValues(alpha: 0.9),
+                                    height: 1.5,
+                                  ),
+                                ),
+                                const SizedBox(height: 24),
+                                SizedBox(
+                                  width: double.infinity,
+                                  child: ElevatedButton(
+                                    onPressed: () => context.go('/dashboard'),
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.white,
+                                      foregroundColor:
+                                          theme.colorScheme.primary,
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 16,
+                                      ),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      elevation: 0,
+                                    ),
+                                    child: const Text(
+                                      'Acceder a la Documentación',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 48),
+                          const _FeatureHighlight(),
+                          const SizedBox(height: 48),
+                          const _ComingSoon(),
+                          const SizedBox(height: 48),
+                          _ContactInfo(launchUrl: _launchUrl),
+                          const SizedBox(height: 32), // Espacio al final
+                        ],
+                      )
+                      .animate()
+                      .fade(duration: 500.ms)
+                      .slideY(
+                        begin: 0.1,
+                        duration: 500.ms,
+                        curve: Curves.easeOutQuart,
+                      ),
             ),
           ],
         ),
@@ -74,7 +137,13 @@ class HomeScreen extends StatelessWidget {
         backgroundColor: Colors.transparent, // Fondo transparente
         elevation: 0,
         tooltip: 'Contactar por WhatsApp',
-        child: Image.asset('assets/icon/logo-wp.png'), // Usa la nueva imagen
+        child: Image.asset('assets/icon/logo-wp.png')
+            .animate(onPlay: (controller) => controller.repeat(reverse: true))
+            .scale(
+              begin: const Offset(1, 1),
+              end: const Offset(1.1, 1.1),
+              duration: 2.seconds,
+            ),
       ),
     );
   }
@@ -90,55 +159,227 @@ class _ContactInfo extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'Contacto',
-          style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
+        Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: theme.colorScheme.primary.withValues(alpha: 0.1),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.contact_support_outlined,
+                color: theme.colorScheme.primary,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Text(
+              'Contacto',
+              style: theme.textTheme.headlineSmall?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 20),
+
+        // Ubicación
+        _ContactCard(
+          icon: Icons.location_on_rounded,
+          title: 'Ubicación',
+          content: 'Lomas de Tecamac, 55765 Santo Tomás Chiconautla, Mex',
+          subtitle: 'Vicente Suárez Manzana 025...',
+          onTap: () => launchUrl(
+            'https://maps.google.com/?q=GRUPO+PADILLA+Y+AGUILAR+Lomas+de+Tecamac',
+          ),
+          accentColor: Colors.orange,
         ),
         const SizedBox(height: 16),
-        _ContactItem(
-          icon: Icons.phone_outlined,
-          text: '55 1234 5678',
-          onTap: () => launchUrl('tel:525512345678'),
+
+        // Teléfono
+        _ContactCard(
+          icon: Icons.phone_in_talk_rounded,
+          title: 'Llámanos',
+          content: '55 8325 2920',
+          onTap: () => launchUrl('tel:525583252920'),
+          accentColor: Colors.green,
         ),
-        const SizedBox(height: 12),
-        _ContactItem(
-          icon: Icons.email_outlined,
-          text: 'contacto@gpya.com.mx',
-          onTap: () => launchUrl('mailto:contacto@gpya.com.mx'),
+        const SizedBox(height: 16),
+
+        // Horarios
+        Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: theme.colorScheme.surface,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: Colors.grey.withValues(alpha: 0.2)),
+          ),
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: Colors.blue.withValues(alpha: 0.1),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(
+                  Icons.access_time_filled_rounded,
+                  color: Colors.blue,
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Horario de Atención',
+                      style: theme.textTheme.labelLarge?.copyWith(
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      'L-V: 09:00 - 17:00',
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      'Sab: 09:00 - 13:00',
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
-        const SizedBox(height: 12),
-        _ContactItem(
-          icon: Icons.location_on_outlined,
-          text: 'Av. Paseo de la Reforma 222, CDMX, México',
-          onTap: () => launchUrl('https://maps.google.com/?q=Paseo+de+la+Reforma+222+CDMX'),
+        const SizedBox(height: 16),
+
+        // Correos
+        Row(
+          children: [
+            Expanded(
+              child: _ContactCard(
+                icon: Icons.email_rounded,
+                title: 'Proyectos',
+                content: 'proyectos@...',
+                onTap: () =>
+                    launchUrl('mailto:proyectos@grupopadillayaguilar.com.mx'),
+                accentColor: Colors.purple,
+                isSmall: true,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: _ContactCard(
+                icon: Icons.build_rounded,
+                title: 'Área Técnica',
+                content: 'tecnica@...',
+                onTap: () => launchUrl(
+                  'mailto:area.tecnica@grupopadillayaguilar.com.mx',
+                ),
+                accentColor: Colors.teal,
+                isSmall: true,
+              ),
+            ),
+          ],
         ),
       ],
     );
   }
 }
 
-class _ContactItem extends StatelessWidget {
+class _ContactCard extends StatelessWidget {
   final IconData icon;
-  final String text;
+  final String title;
+  final String content;
+  final String? subtitle;
   final VoidCallback onTap;
+  final Color accentColor;
+  final bool isSmall;
 
-  const _ContactItem({required this.icon, required this.text, required this.onTap});
+  const _ContactCard({
+    required this.icon,
+    required this.title,
+    required this.content,
+    this.subtitle,
+    required this.onTap,
+    this.accentColor = Colors.blue,
+    this.isSmall = false,
+  });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(8),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
+      borderRadius: BorderRadius.circular(16),
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: theme.colorScheme.surface,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: Colors.grey.withValues(alpha: 0.2)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.03),
+              blurRadius: 8,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
         child: Row(
           children: [
-            Icon(icon, color: theme.colorScheme.secondary, size: 24),
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: accentColor.withValues(alpha: 0.1),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(icon, color: accentColor, size: isSmall ? 20 : 24),
+            ),
             const SizedBox(width: 16),
             Expanded(
-              child: Text(text, style: theme.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600)),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: theme.textTheme.labelLarge?.copyWith(
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    content,
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  if (subtitle != null) ...[
+                    const SizedBox(height: 2),
+                    Text(
+                      subtitle!,
+                      style: theme.textTheme.bodySmall,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ],
+              ),
             ),
+            if (!isSmall)
+              Icon(
+                Icons.arrow_forward_ios_rounded,
+                size: 16,
+                color: Colors.grey[400],
+              ),
           ],
         ),
       ),
@@ -156,9 +397,9 @@ class _ComingSoon extends StatelessWidget {
       children: [
         Text(
           'Próximamente',
-          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+          style: Theme.of(
+            context,
+          ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 16),
         const Wrap(
@@ -195,26 +436,29 @@ class _FeatureHighlight extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    return Column(
       children: [
-        _FeatureItem(
+        const _FeatureItem(
           icon: Icons.shield_outlined,
           title: 'Cumplimiento Garantizado',
-          description: 'Expertos en normativas para mantener su empresa segura y en regla.',
+          description:
+              'Expertos en normativas para mantener su empresa segura y en regla.',
         ),
-        SizedBox(height: 24),
-        _FeatureItem(
+        const SizedBox(height: 24),
+        const _FeatureItem(
           icon: Icons.gavel_rounded,
           title: 'Asesoría Legal Estratégica',
-          description: 'Soluciones legales que protegen sus intereses y fomentan el crecimiento.',
+          description:
+              'Soluciones legales que protegen sus intereses y fomentan el crecimiento.',
         ),
-        SizedBox(height: 24),
-        _FeatureItem(
+        const SizedBox(height: 24),
+        const _FeatureItem(
           icon: Icons.health_and_safety_outlined,
           title: 'Planes de Protección Civil',
-          description: 'Certificación y tranquilidad ante cualquier eventualidad.',
+          description:
+              'Certificación y tranquilidad ante cualquier eventualidad.',
         ),
-      ],
+      ].animate(interval: 200.ms).fade().slideX(begin: 0.2),
     );
   }
 }
@@ -224,27 +468,59 @@ class _FeatureItem extends StatelessWidget {
   final String title;
   final String description;
 
-  const _FeatureItem({required this.icon, required this.title, required this.description});
+  const _FeatureItem({
+    required this.icon,
+    required this.title,
+    required this.description,
+  });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Icon(icon, color: theme.colorScheme.secondary, size: 30),
-        const SizedBox(width: 20),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(title, style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
-              const SizedBox(height: 4),
-              Text(description, style: theme.textTheme.bodyMedium),
-            ],
+
+    // Efecto 3D removido por solicitud
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surface,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 5),
           ),
-        ),
-      ],
+        ],
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: theme.colorScheme.primary.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Icon(icon, color: theme.colorScheme.primary, size: 30),
+          ),
+          const SizedBox(width: 20),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(description, style: theme.textTheme.bodyMedium),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

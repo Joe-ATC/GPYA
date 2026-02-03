@@ -26,3 +26,6 @@ app-release.apk
 
 # Visual Studio Code
 .vscode/
+
+# Security
+.env

@@ -9,10 +9,10 @@ class ServicesScreen extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Scaffold(
+      appBar: const AppHeader(),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            const AppHeader(),
             Padding(
               padding: const EdgeInsets.all(24.0),
               child: Column(
@@ -34,19 +34,22 @@ class ServicesScreen extends StatelessWidget {
                   const _ServiceCard(
                     icon: Icons.gavel_rounded,
                     title: 'Asesoría Legal Corporativa',
-                    description: 'Ofrecemos un soporte legal integral que abarca desde la constitución de sociedades hasta la gestión de contratos y la resolución de disputas comerciales.',
+                    description:
+                        'Ofrecemos un soporte legal integral que abarca desde la constitución de sociedades hasta la gestión de contratos y la resolución de disputas comerciales.',
                   ),
                   const SizedBox(height: 16),
                   const _ServiceCard(
                     icon: Icons.shield_outlined,
                     title: 'Cumplimiento Normativo (Compliance)',
-                    description: 'Ayudamos a su empresa a navegar el complejo entorno regulatorio, asegurando el cumplimiento de las normativas aplicables y minimizando riesgos.',
+                    description:
+                        'Ayudamos a su empresa a navegar el complejo entorno regulatorio, asegurando el cumplimiento de las normativas aplicables y minimizando riesgos.',
                   ),
                   const SizedBox(height: 16),
                   const _ServiceCard(
                     icon: Icons.health_and_safety_outlined,
                     title: 'Protección Civil',
-                    description: 'Preparamos a su empresa para responder eficazmente ante emergencias. Diseñamos planes internos, capacitamos a brigadas y realizamos simulacros con certificación oficial.',
+                    description:
+                        'Preparamos a su empresa para responder eficazmente ante emergencias. Diseñamos planes internos, capacitamos a brigadas y realizamos simulacros con certificación oficial.',
                   ),
                 ],
               ),
@@ -54,6 +57,8 @@ class ServicesScreen extends StatelessWidget {
           ],
         ),
       ),
+      floatingActionButton:
+          null, // Ensure no FAB is accidentally added if valid
     );
   }
 }
@@ -82,7 +87,12 @@ class _ServiceCard extends StatelessWidget {
           children: [
             Icon(icon, size: 40, color: theme.colorScheme.primary),
             const SizedBox(height: 16),
-            Text(title, style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
+            Text(
+              title,
+              style: theme.textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             const SizedBox(height: 8),
             Text(description, style: theme.textTheme.bodyMedium),
           ],

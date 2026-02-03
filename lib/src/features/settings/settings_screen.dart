@@ -1,19 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
+
 import 'package:myapp/src/features/settings/theme_provider.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
+
+  Future<void> _launchUrl(String url) async {
+    final Uri uri = Uri.parse(url);
+    if (!await launchUrl(uri)) {
+      throw Exception('No se pudo lanzar $url');
+    }
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Ajustes'),
-      ),
+      appBar: AppBar(title: const Text('Ajustes')),
       body: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
         children: <Widget>[
@@ -25,17 +31,58 @@ class SettingsScreen extends ConsumerWidget {
           ),
           const SizedBox(height: 20),
 
-          // Sección de Cuenta
+          // Sección de Ayuda
           _buildSectionCard(
             theme,
-            title: 'Cuenta',
+            title: 'Ayuda y Soporte',
             children: [
               ListTile(
-                leading: Icon(Icons.logout, color: theme.colorScheme.error),
-                title: Text('Cerrar Sesión', style: TextStyle(color: theme.colorScheme.error)),
-                onTap: () async {
-                  await Supabase.instance.client.auth.signOut();
-                },
+                leading: Icon(
+                  Icons.support_agent_rounded,
+                  color: theme.colorScheme.primary,
+                ),
+                title: const Text('Contactar Soporte Técnico'),
+                subtitle: const Text(
+                  'area.tecnica@grupopadillayaguilar.com.mx',
+                ),
+                onTap: () => _launchUrl(
+                  'mailto:area.tecnica@grupopadillayaguilar.com.mx',
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+
+          // Sección Legal
+          _buildSectionCard(
+            theme,
+            title: 'Información Legal',
+            children: [
+              ListTile(
+                leading: const Icon(Icons.description_outlined),
+                title: const Text('Términos y Condiciones'),
+                trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                onTap: () => _launchUrl(
+                  'mailto:area.tecnica@grupopadillayaguilar.com.mx?subject=Consulta%20Términos%20y%20Condiciones',
+                ),
+              ),
+              ListTile(
+                leading: const Icon(Icons.privacy_tip_outlined),
+                title: const Text('Política de Privacidad'),
+                trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                onTap: () => _launchUrl(
+                  'mailto:area.tecnica@grupopadillayaguilar.com.mx?subject=Consulta%20Privacidad',
+                ),
+              ),
+              ListTile(
+                leading: const Icon(Icons.gavel_outlined),
+                title: const Text('Licencias de Código Abierto'),
+                trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                onTap: () => showLicensePage(
+                  context: context,
+                  applicationName: 'GPYA',
+                  applicationLegalese: '© 2026 Grupo Padilla y Aguilar',
+                ),
               ),
             ],
           ),
@@ -44,7 +91,11 @@ class SettingsScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildSectionCard(ThemeData theme, {required String title, required List<Widget> children}) {
+  Widget _buildSectionCard(
+    ThemeData theme, {
+    required String title,
+    required List<Widget> children,
+  }) {
     return Card(
       elevation: 2,
       child: Padding(
@@ -52,7 +103,12 @@ class SettingsScreen extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Text(title, style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
+            Text(
+              title,
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             const Divider(height: 24),
             ...children,
           ],

@@ -19,7 +19,7 @@ dependencies:
   permission_handler: ^12.0.1
   open_filex: ^4.7.0
   flutter_animate: ^4.5.2
-  flutter_tilt: ^3.3.2
+  flutter_dotenv: ^5.2.1
   animated_text_kit: ^4.3.0
   flutter_svg: ^2.0.10+1
   go_router: ^17.0.1
@@ -40,30 +40,31 @@ flutter:
   assets:
     - assets/images/
     - assets/icon/
+    - .env
 
 flutter_launcher_icons:
   android: "launcher_icon"
   ios: true
-  image_path: "assets/icon/icon-app.png"
+  image_path: "assets/icon/icon-portada.jpg"
   
   adaptive_icon_background: "#1A1A1A"
-  adaptive_icon_foreground: "assets/icon/icon-app.png"
+  adaptive_icon_foreground: "assets/icon/icon-portada.jpg"
 
   web:
     generate: true
-    image_path: "assets/icon/icon-app.png"
+    image_path: "assets/icon/icon-portada.jpg"
     background_color: "#1A1A1A"
     theme_color: "#D32F2F"
     
   windows:
     generate: true
-    image_path: "assets/icon/icon-app.png"
+    image_path: "assets/icon/icon-portada.jpg"
     icon_size: 48 # Favicon size for Windows
 
   macos:
     generate: true
-    image_path: "assets/icon/icon-app.png"
+    image_path: "assets/icon/icon-portada.jpg"
 
   linux:
     generate: true
-    image_path: "assets/icon/icon-app.png"
+    image_path: "assets/icon/icon-portada.jpg"

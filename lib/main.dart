@@ -2,29 +2,35 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:myapp/src/routing/app_router.dart';
 import 'package:myapp/src/features/settings/theme_provider.dart';
 import 'dart:developer' as developer;
 
 void main() {
-  runZonedGuarded<Future<void>>(() async {
-    WidgetsFlutterBinding.ensureInitialized();
+  runZonedGuarded<Future<void>>(
+    () async {
+      WidgetsFlutterBinding.ensureInitialized();
 
-    await Supabase.initialize(
-      url: 'https://ifbmzqzxvogewkekapcv.supabase.co',
-      anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlmYm16cXp4dm9nZXdrZWthcGN2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk1MzAwMjQsImV4cCI6MjA4NTEwNjAyNH0.K3DZB5QmLs-HnkAz5dkokUkHODzXj-CUW2MN8gMHqgs',
-    );
+      await dotenv.load(fileName: ".env");
 
-    runApp(const ProviderScope(child: MyApp()));
-  }, (error, stack) {
-    developer.log(
-      'Error fatal no controlado',
-      name: 'main',
-      error: error,
-      stackTrace: stack,
-    );
-  });
+      await Supabase.initialize(
+        url: dotenv.env['SUPABASE_URL'] ?? '',
+        anonKey: dotenv.env['SUPABASE_ANON_KEY'] ?? '',
+      );
+
+      runApp(const ProviderScope(child: MyApp()));
+    },
+    (error, stack) {
+      developer.log(
+        'Error fatal no controlado',
+        name: 'main',
+        error: error,
+        stackTrace: stack,
+      );
+    },
+  );
 }
 
 class MyApp extends ConsumerWidget {
@@ -58,7 +64,7 @@ class MyApp extends ConsumerWidget {
         titleTextStyle: TextStyle(
           fontWeight: FontWeight.bold,
           fontSize: 20,
-          color: Colors.black87
+          color: Colors.black87,
         ),
       ),
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
@@ -86,10 +92,7 @@ class MyApp extends ConsumerWidget {
       appBarTheme: const AppBarTheme(
         backgroundColor: Color(0xFF1A1A1A),
         elevation: 0,
-        titleTextStyle: TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: 20,
-        ),
+        titleTextStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
       ),
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
         backgroundColor: const Color(0xFF1A1A1A),
@@ -100,7 +103,7 @@ class MyApp extends ConsumerWidget {
     );
 
     return MaterialApp.router(
-      title: 'DocuFlow',
+      title: 'GPYA',
       theme: lightTheme,
       darkTheme: darkTheme,
       themeMode: themeMode,

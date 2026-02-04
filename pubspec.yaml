@@ -1,6 +1,6 @@
 name: myapp
 description: "A new Flutter project."
-publish_to: 'none'
+publish_to: "none"
 version: 1.0.0+1
 
 environment:
@@ -38,33 +38,32 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - assets/images/
     - assets/icon/
     - .env
 
 flutter_launcher_icons:
   android: "launcher_icon"
   ios: true
-  image_path: "assets/icon/icon-portada.jpg"
-  
+  image_path: "assets/icon/icon-app.jpg"
+
   adaptive_icon_background: "#1A1A1A"
-  adaptive_icon_foreground: "assets/icon/icon-portada.jpg"
+  adaptive_icon_foreground: "assets/icon/icon-app.jpg"
 
   web:
     generate: true
-    image_path: "assets/icon/icon-portada.jpg"
+    image_path: "assets/icon/icon-app.jpg"
     background_color: "#1A1A1A"
     theme_color: "#D32F2F"
-    
+
   windows:
     generate: true
-    image_path: "assets/icon/icon-portada.jpg"
+    image_path: "assets/icon/icon-app.jpg"
     icon_size: 48 # Favicon size for Windows
 
   macos:
     generate: true
-    image_path: "assets/icon/icon-portada.jpg"
+    image_path: "assets/icon/icon-app.jpg"
 
   linux:
     generate: true
-    image_path: "assets/icon/icon-portada.jpg"
+    image_path: "assets/icon/icon-app.jpg"

@@ -1,36 +1,54 @@
 enum DocumentCategory {
-  contratos,
-  demandas,
-  identificaciones,
+  seguridad,
+  salud,
+  organizacion,
+  especificas,
 }
 
 // Función para convertir un string a DocumentCategory
 DocumentCategory categoryFromString(String? categoryString) {
   if (categoryString == null) {
-    return DocumentCategory.contratos; // O un valor por defecto que prefieras
+    return DocumentCategory.seguridad; // Valor por defecto
   }
   switch (categoryString.toLowerCase()) {
-    case 'contratos':
-      return DocumentCategory.contratos;
-    case 'demandas':
-      return DocumentCategory.demandas;
-    case 'identificaciones':
-      return DocumentCategory.identificaciones;
+    case 'seguridad':
+      return DocumentCategory.seguridad;
+    case 'salud':
+      return DocumentCategory.salud;
+    case 'organizacion':
+      return DocumentCategory.organizacion;
+    case 'especificas':
+      return DocumentCategory.especificas;
     default:
-      return DocumentCategory.contratos; // O lanzar un error
+      return DocumentCategory.seguridad;
   }
 }
 
-// Extensión para obtener el nombre del icono
+// Extensión para obtener propiedades de cada categoría
 extension DocumentCategoryExtension on DocumentCategory {
-  String get iconName {
+  String get displayName {
     switch (this) {
-      case DocumentCategory.contratos:
-        return 'Contrato';
-      case DocumentCategory.demandas:
-        return 'Demanda';
-      case DocumentCategory.identificaciones:
-        return 'ID';
+      case DocumentCategory.seguridad:
+        return 'Normas de Seguridad';
+      case DocumentCategory.salud:
+        return 'Normas de Salud';
+      case DocumentCategory.organizacion:
+        return 'Normas de Organización';
+      case DocumentCategory.especificas:
+        return 'Normas Específicas';
+    }
+  }
+
+  String get shortName {
+    switch (this) {
+      case DocumentCategory.seguridad:
+        return 'Seguridad';
+      case DocumentCategory.salud:
+        return 'Salud';
+      case DocumentCategory.organizacion:
+        return 'Organización';
+      case DocumentCategory.especificas:
+        return 'Específicas';
     }
   }
 }
@@ -42,8 +60,8 @@ class Document {
   final String fileUrl;
   final String? thumbnailUrl;
   final DateTime createdAt;
-  final DocumentCategory category; // Campo añadido
-  final String downloadUrl; // Campo añadido
+  final DocumentCategory category;
+  final String downloadUrl;
 
   Document({
     required this.id,
@@ -58,16 +76,13 @@ class Document {
 
   factory Document.fromJson(Map<String, dynamic> json) {
     return Document(
-      // CORRECCIÓN: Se convierte el ID a String de forma segura para evitar errores de tipo.
       id: json['id'].toString(),
       title: json['title'] as String? ?? '',
       description: json['description'] as String? ?? '',
       fileUrl: json['url'] as String? ?? '',
       thumbnailUrl: json['thumbnail_url'] as String?,
       createdAt: DateTime.parse(json['created_at'] as String),
-      // Conversión segura del string de la DB a nuestro enum
       category: categoryFromString(json['category'] as String?),
-      // Aseguramos que downloadUrl no sea nulo
       downloadUrl: json['download_url'] as String? ?? json['url'] as String? ?? '',
     );
   }

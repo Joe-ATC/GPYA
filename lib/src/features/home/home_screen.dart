@@ -68,7 +68,7 @@ class HomeScreen extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'Consultoría Integral para Empresas',
+                                  'En casa nos esperan',
                                   style: theme.textTheme.headlineMedium
                                       ?.copyWith(
                                         fontWeight: FontWeight.bold,
@@ -440,23 +440,23 @@ class _FeatureHighlight extends StatelessWidget {
       children: [
         const _FeatureItem(
           icon: Icons.shield_outlined,
-          title: 'Cumplimiento Garantizado',
+          title: 'Cumplimiento',
           description:
-              'Expertos en normativas para mantener su empresa segura y en regla.',
+              'En un entorno que evoluciona rápidamente, la capacitación continua no solo es un aspecto deseable, sino una necesidad crítica.',
         ),
         const SizedBox(height: 24),
         const _FeatureItem(
           icon: Icons.gavel_rounded,
-          title: 'Asesoría Legal Estratégica',
+          title: 'Asesoría',
           description:
-              'Soluciones legales que protegen sus intereses y fomentan el crecimiento.',
+              'Planes de cumplimiento integral para tu empresa o institución.',
         ),
         const SizedBox(height: 24),
         const _FeatureItem(
           icon: Icons.health_and_safety_outlined,
-          title: 'Planes de Protección Civil',
+          title: 'Consultoría',
           description:
-              'Certificación y tranquilidad ante cualquier eventualidad.',
+              'Solución integral a las necesidades de tu empresa en materia de estudios de ambiente laboral y normas oficiales mexicanas.',
         ),
       ].animate(interval: 200.ms).fade().slideX(begin: 0.2),
     );

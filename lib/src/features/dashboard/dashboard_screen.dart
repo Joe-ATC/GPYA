@@ -3,17 +3,29 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:myapp/src/features/dashboard/document_model.dart';
-import 'package:myapp/src/features/dashboard/documents_provider.dart';
+import 'package:myapp/src/features/dashboard/document_filter_provider.dart';
 import 'package:myapp/widgets/app_header.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class DashboardScreen extends ConsumerWidget {
+class DashboardScreen extends ConsumerStatefulWidget {
   const DashboardScreen({super.key});
 
-  // Función para lanzar URLs, necesaria para el botón de WhatsApp
+  @override
+  ConsumerState<DashboardScreen> createState() => _DashboardScreenState();
+}
+
+class _DashboardScreenState extends ConsumerState<DashboardScreen> {
+  final TextEditingController _searchController = TextEditingController();
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
   Future<void> _launchUrl(String url) async {
     final Uri uri = Uri.parse(url);
     if (!await launchUrl(uri)) {
@@ -22,13 +34,12 @@ class DashboardScreen extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final documentsAsync = ref.watch(documentsProvider);
+  Widget build(BuildContext context) {
+    final filteredDocumentsAsync = ref.watch(filteredDocumentsProvider);
+    final selectedCategory = ref.watch(selectedCategoryProvider);
     final theme = Theme.of(context);
 
     const phoneNumber = "525583252920";
-    // Se usa una función JS global `encodeURIComponent` que no existe en Dart.
-    // Dart tiene `Uri.encodeComponent` para esto.
     const message = "Hola quiero más información sobre...";
     final whatsappUrl =
         "https://wa.me/$phoneNumber?text=${Uri.encodeComponent(message)}";
@@ -36,10 +47,9 @@ class DashboardScreen extends ConsumerWidget {
     return Scaffold(
       appBar: const AppHeader(),
       body: Column(
-        crossAxisAlignment:
-            CrossAxisAlignment.start, // Alinea el título a la izquierda
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // NUEVO: Título de la sección
+          // Título de la sección
           Padding(
             padding: const EdgeInsets.fromLTRB(24.0, 24.0, 24.0, 16.0),
             child: Text(
@@ -50,29 +60,104 @@ class DashboardScreen extends ConsumerWidget {
               ),
             ),
           ),
+
+          // Barra de búsqueda
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+            child: TextField(
+              controller: _searchController,
+              onChanged: (value) {
+                ref.read(searchQueryProvider.notifier).state = value;
+              },
+              decoration: InputDecoration(
+                hintText: 'Buscar documentos...',
+                prefixIcon: const Icon(Icons.search),
+                suffixIcon: _searchController.text.isNotEmpty
+                    ? IconButton(
+                        icon: const Icon(Icons.clear),
+                        onPressed: () {
+                          _searchController.clear();
+                          ref.read(searchQueryProvider.notifier).state = '';
+                        },
+                      )
+                    : null,
+                filled: true,
+                fillColor: theme.colorScheme.surfaceContainerHighest,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide.none,
+                ),
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 12,
+                ),
+              ),
+            ),
+          ),
+
+          const SizedBox(height: 16),
+
+          // Chips de categorías
+          SizedBox(
+            height: 40,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: 24.0),
+              children: [
+                // Chip "Todas"
+                Padding(
+                  padding: const EdgeInsets.only(right: 8.0),
+                  child: FilterChip(
+                    label: const Text('Todas'),
+                    selected: selectedCategory == null,
+                    onSelected: (_) {
+                      ref.read(selectedCategoryProvider.notifier).state = null;
+                    },
+                    selectedColor: theme.colorScheme.primary.withValues(alpha: 0.2),
+                    checkmarkColor: theme.colorScheme.primary,
+                  ),
+                ),
+                // Chips para cada categoría
+                ...DocumentCategory.values.map((category) {
+                  return Padding(
+                    padding: const EdgeInsets.only(right: 8.0),
+                    child: FilterChip(
+                      label: Text(category.shortName),
+                      selected: selectedCategory == category,
+                      onSelected: (_) {
+                        ref.read(selectedCategoryProvider.notifier).state = category;
+                      },
+                      selectedColor: theme.colorScheme.primary.withValues(alpha: 0.2),
+                      checkmarkColor: theme.colorScheme.primary,
+                    ),
+                  );
+                }),
+              ],
+            ),
+          ),
+
+          const SizedBox(height: 16),
+
+          // Lista de documentos filtrados
           Expanded(
-            child: documentsAsync.when(
-              data: (documents) =>
-                  _buildDocumentsList(context, theme, documents),
+            child: filteredDocumentsAsync.when(
+              data: (documents) => _buildDocumentsList(context, theme, documents),
               loading: () => const Center(child: CircularProgressIndicator()),
-              // NUEVO: UI de error mejorada
               error: (err, stack) => _buildErrorWidget(theme, err.toString()),
             ),
           ),
         ],
       ),
-      // NUEVO: Botón flotante de WhatsApp para coherencia
       floatingActionButton: FloatingActionButton(
         onPressed: () => _launchUrl(whatsappUrl),
-        backgroundColor: Colors.transparent, // Fondo transparente
+        backgroundColor: Colors.transparent,
         elevation: 0,
         tooltip: 'Contactar por WhatsApp',
-        child: Image.asset('assets/icon/logo-wp.png'), // Usa la nueva imagen
+        child: Image.asset('assets/icon/logo-wp.png'),
       ),
     );
   }
 
-  // NUEVO: Widget para mostrar errores de forma más amigable
   Widget _buildErrorWidget(ThemeData theme, String error) {
     return Center(
       child: Padding(
@@ -95,7 +180,6 @@ class DashboardScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              // Muestra el error real de Supabase para depuración
               'No se pudo establecer conexión con el servidor de documentos. Por favor, inténtelo más tarde.\n\nDetalle: $error',
               style: theme.textTheme.bodyMedium,
               textAlign: TextAlign.center,
@@ -112,8 +196,29 @@ class DashboardScreen extends ConsumerWidget {
     List<Document> documents,
   ) {
     if (documents.isEmpty) {
-      return const Center(
-        child: Text('No hay documentos disponibles en este momento.'),
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.search_off_rounded,
+              size: 60,
+              color: theme.colorScheme.outline,
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'No se encontraron documentos',
+              style: theme.textTheme.titleMedium,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Intenta con otra búsqueda o categoría',
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.colorScheme.outline,
+              ),
+            ),
+          ],
+        ),
       );
     }
     return ListView.separated(
@@ -138,7 +243,6 @@ class _DocumentCard extends StatefulWidget {
 }
 
 class _DocumentCardState extends State<_DocumentCard> {
-  // Estado de descarga
   bool _isDownloading = false;
   double _progress = 0.0;
   String? _filePath;
@@ -150,21 +254,15 @@ class _DocumentCardState extends State<_DocumentCard> {
     _checkFileExists();
   }
 
-  // Verifica si el archivo ya existe localmente
   Future<void> _checkFileExists() async {
-    // Lógica simple por ahora, se podría mejorar persistiendo descargas
+    // Lógica para verificar si el archivo ya existe
   }
 
   Future<void> _downloadFile() async {
     final platform = Theme.of(context).platform;
 
-    // 1. Solicitar permisos (Android < 13 requiere Storage, Android 13+ fotos/videos/audio)
-    // Para simplificar y compatibilidad, intentamos acceder al directorio público.
-    // Nota: En Android 13+ con Scope Storage, escribir en Downloads suele ser permitido sin permiso EXPLÍCITO si usamos MediaStore o rutas públicas.
-
-    // Verificamos permisos básicos solo si es necesario (Android < 11 principalmente)
     if (await Permission.storage.request().isDenied) {
-      // Intentamos continuar, algunos dispositivos nuevos no dan este permiso pero dejan escribir en Downloads
+      // Intentamos continuar
     }
 
     setState(() {
@@ -175,7 +273,6 @@ class _DocumentCardState extends State<_DocumentCard> {
     try {
       final dio = Dio();
 
-      // Obtener directorio de descargas
       Directory? downloadsDir;
       if (platform == TargetPlatform.android) {
         downloadsDir = Directory('/storage/emulated/0/Download');
@@ -188,16 +285,14 @@ class _DocumentCardState extends State<_DocumentCard> {
       }
 
       if (!downloadsDir.existsSync()) {
-        downloadsDir.createSync(); // Intentar crear si no existe
+        downloadsDir.createSync();
       }
 
-      // Nombre del archivo
       final fileName =
           '${widget.document.title.replaceAll(RegExp(r'[^\w\s\.-]'), '')}.pdf';
       final savePath = '${downloadsDir.path}/$fileName';
       final file = File(savePath);
 
-      // Verificamos si ya existe
       if (file.existsSync()) {
         if (mounted) {
           setState(() {
@@ -213,7 +308,7 @@ class _DocumentCardState extends State<_DocumentCard> {
             ),
           );
         }
-        return; // Salimos para no re-descargar
+        return;
       }
 
       await dio.download(
@@ -285,11 +380,34 @@ class _DocumentCardState extends State<_DocumentCard> {
                 Icon(iconData, color: theme.colorScheme.primary, size: 30),
                 const SizedBox(width: 12),
                 Expanded(
-                  child: Text(
-                    widget.document.title,
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.document.title,
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      // Mostrar categoría como chip pequeño
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 2,
+                        ),
+                        decoration: BoxDecoration(
+                          color: theme.colorScheme.primary.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(
+                          widget.document.category.shortName,
+                          style: theme.textTheme.labelSmall?.copyWith(
+                            color: theme.colorScheme.primary,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
@@ -301,7 +419,7 @@ class _DocumentCardState extends State<_DocumentCard> {
             ),
             const SizedBox(height: 16),
 
-            // Área de acciones (Barra de progreso o Botones)
+            // Área de acciones
             if (_isDownloading)
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
@@ -378,12 +496,14 @@ class _DocumentCardState extends State<_DocumentCard> {
 
   IconData _getIconForCategory(DocumentCategory category) {
     switch (category) {
-      case DocumentCategory.contratos:
-        return Icons.gavel_rounded;
-      case DocumentCategory.demandas:
-        return Icons.shield_outlined;
-      case DocumentCategory.identificaciones:
-        return Icons.health_and_safety_outlined;
+      case DocumentCategory.seguridad:
+        return Icons.security_rounded;
+      case DocumentCategory.salud:
+        return Icons.health_and_safety_rounded;
+      case DocumentCategory.organizacion:
+        return Icons.business_rounded;
+      case DocumentCategory.especificas:
+        return Icons.description_rounded;
     }
   }
 }

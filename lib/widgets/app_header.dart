@@ -26,16 +26,13 @@ class AppHeader extends StatelessWidget implements PreferredSizeWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             // USA EL ICONO CORRECTO DE LA APP
-            Image.asset(
-              'assets/icon/icon-app.png', 
-              height: 40, 
-            ),
+            Image.asset('assets/icon/icon-app.jpg', height: 40),
             const SizedBox(width: 12),
             // Nombre de la empresa
             Text(
-              'GPYA', // Se actualiza al nuevo nombre corto de la app
+              'Grupo Padilla y Aguilar',
               style: theme.textTheme.titleLarge?.copyWith(
-                fontSize: 18,
+                fontSize: 16, // Reducido un poco para acomodar el nombre largo
                 fontWeight: FontWeight.w600,
               ),
             ),
